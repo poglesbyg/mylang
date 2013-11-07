@@ -1,0 +1,12 @@
+;;; mylisp is an implementation of McCarthy's Lisp
+;;; going to include numbers and strings
+;;; by Paul Grant
+
+(defun -eval (expr env)
+  (cond
+    ((car expr) "'")
+    ((atom expr) expr)
+    ((eq 'quote (car input)))))
+  
+(defun -quote (expr)
+  expr)
