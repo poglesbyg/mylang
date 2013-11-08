@@ -35,5 +35,6 @@
 
 (defun -cond (expr env)
   (cond
-    ((-eval (caar expr) env) (-eval (cadr expr) env) )))
-
+    ((null expr) nil)
+    ((-eval (caar expr) env) (-eval (cadar expr) env))
+    (t (-cond (cdr expr) env))))
