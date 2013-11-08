@@ -11,7 +11,7 @@
     ((eq 'cons (car expr)) (-cons (-eval (cadr expr) env)
 				  (-eval (caddr expr) env)))
     ((eq 'eq (car expr)) (-eq (-eval (cadr expr) env)
-			      (-eval (caddr expr) env)))
+			      (-eval (caddr expr) env)))))
 
 (defun -quote (expr)
   (cadr expr))
