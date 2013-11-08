@@ -6,8 +6,7 @@ following McCarthy's 1960 essay on implementing lisp as well as some of Graham's
 TODO:
 - implement atom
 - implement eq
-- implement lambda
+- implement lambda	
 
 THEN:
-
 - use mylang to implement the rest of lisp
