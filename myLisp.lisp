@@ -13,7 +13,14 @@
 				  (-eval (caddr expr) env)))
     ((eq 'eq (car expr)) (-eq (-eval (cadr expr) env)
 			      (-eval (caddr expr) env)))
-    ((eq 'cond (car expr)) (-cond (cadr expr) env))))
+    ((eq 'cond (car expr)) (-cond (cadr expr) env))
+    ((eq 'label (caar expr))
+     (-eval (cons (caddar expr) (cdr expr))
+	    (cons (list (cadar expr) (car expr)) env)))
+    ((eq 'lambda (caar expr))
+     (-eval (caddar expr)
+	    (-append (-pair (cadar expr) (lambdaHelper (cdr expr) env))
+		     env)))))
 
 (defun -atom (expr)
   (atom expr))
@@ -64,3 +71,9 @@
 (defun -assoc (expr1 expr2)
   (cond ((eq (caar expr2) expr1) (cadr expr2))
 	('t (-assoc expr1 (cdr expr2)))))
+
+(defun lambdaHelper (meta arg)
+  (cond ((-null meta) '())
+	('t (cons (-eval (car meta) arg)
+		  (lambdaHelper (cdr meta) arg)))))
+

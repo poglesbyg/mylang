@@ -4,9 +4,63 @@
 
 (defun -eval (expr env)
   (cond
-    ((car expr) "'")
-    ((atom expr) expr)
-    ((eq 'quote (car input)))))
-  
+    ((atom expr) (cdr (assoc expr env)))
+    ((eq 'atom (car expr)) (-atom (-eval (cadr expr) env)))
+    ((eq 'quote (car expr)) (-quote expr))
+    ((eq 'car (car expr)) (-car (-eval (cadr expr) env)))
+    ((eq 'cdr (car expr)) (-cdr (-eval (cadr expr) env)))
+    ((eq 'cons (car expr)) (-cons (-eval (cadr expr) env)
+				  (-eval (caddr expr) env)))
+    ((eq 'eq (car expr)) (-eq (-eval (cadr expr) env)
+			      (-eval (caddr expr) env)))
+    ((eq 'cond (car expr)) (-cond (cadr expr) env))))
+
+(defun -atom (expr)
+  (atom expr))
+
 (defun -quote (expr)
-  expr)
+  (cadr expr))
+
+(defun -car (expr)
+  (car expr))
+
+(defun -cdr (expr)
+  (cdr expr))
+
+(defun -cons (expr1 expr2)
+  (cons expr1 expr2))
+
+(defun -eq (expr1 expr2)
+  (eq expr1 expr2))
+
+(defun -cond (expr env)
+  (cond
+    ((null expr) nil)
+    ((-eval (caar expr) env) (-eval (cadar expr) env))
+    (t (-cond (cdr expr) env))))
+
+(defun -null (expr)
+  (-eq expr '()))
+
+(defun -and (expr1 expr2)
+  (cond (expr1 (cond (expr2 't) ('t '())))
+	('t '())))
+
+(defun -not (expr)
+  (cond (expr '())
+	('t 't)))
+
+(defun -append (expr1 expr2)
+  (cond ((-null expr1) expr2)
+	('t (cons (car expr1) (-append (cdr expr1) expr2)))))
+
+
+(defun -pair (expr1 expr2)
+  (cond ((-and (-null expr1) (-null expr2)) '())
+	((-and (-not (atom expr1)) (-not (atom expr2)))
+	 (cons (list (car expr1) (car expr2))
+	       (-pair (cdr expr1) (cdr expr2))))))
+
+(defun -assoc (expr1 expr2)
+  (cond ((eq (caar expr2) expr1) (cadr expr2))
+	('t (-assoc expr1 (cdr expr2)))))
