@@ -39,4 +39,28 @@
     ((-eval (caar expr) env) (-eval (cadar expr) env))
     (t (-cond (cdr expr) env))))
 
-(defmacro lambda ())
+(defun -null (expr)
+  (-eq expr '()))
+
+(defun -and (expr1 expr2)
+  (cond (expr1 (cond (expr2 't) ('t '())))
+	('t '())))
+
+(defun -not (expr)
+  (cond (expr '())
+	('t 't)))
+
+(defun -append (expr1 expr2)
+  (cond ((-null expr1) expr2)
+	('t (cons (car expr1) (-append (cdr expr1) expr2)))))
+
+
+(defun -pair (expr1 expr2)
+  (cond ((-and (-null expr1) (-null expr2)) '())
+	((-and (-not (atom expr1)) (-not (atom expr2)))
+	 (cons (list (car expr1) (car expr2))
+	       (-pair (cdr expr1) (cdr expr2))))))
+
+(defun -assoc (expr1 expr2)
+  (cond ((eq (caar expr2) expr1) (cadr expr2))
+	('t (-assoc expr1 (cdr expr2)))))
