@@ -2,25 +2,34 @@
 ;;; going to include numbers and strings
 ;;; by Paul Grant
 
+
 (defun -eval (expr env)
   (cond
-    ((atom expr) (cdr (assoc expr env)))
-    ((eq 'atom (car expr)) (-atom (-eval (cadr expr) env)))
-    ((eq 'quote (car expr)) (-quote expr))
-    ((eq 'car (car expr)) (-car (-eval (cadr expr) env)))
-    ((eq 'cdr (car expr)) (-cdr (-eval (cadr expr) env)))
-    ((eq 'cons (car expr)) (-cons (-eval (cadr expr) env)
-				  (-eval (caddr expr) env)))
-    ((eq 'eq (car expr)) (-eq (-eval (cadr expr) env)
-			      (-eval (caddr expr) env)))
-    ((eq 'cond (car expr)) (-cond (cadr expr) env))
-    ((eq 'label (caar expr))
-     (-eval (cons (caddar expr) (cdr expr))
-	    (cons (list (cadar expr) (car expr)) env)))
-    ((eq 'lambda (caar expr))
-     (-eval (caddar expr)
-	    (-append (-pair (cadar expr) (lambdaHelper (cdr expr) env))
-		     env)))))
+    ((atom expr) (cdr (-assoc expr env)))
+    ((atom (car expr))
+     (cond
+      ((eq 'atom (car expr)) (-atom (-eval (cadr expr) env)))
+      ((eq 'quote (car expr)) (-quote expr))
+      ((eq 'car (car expr)) (-car (-eval (cadr expr) env)))
+      ((eq 'cdr (car expr)) (-cdr (-eval (cadr expr) env)))
+      ((eq 'cons (car expr)) (-cons (-eval (cadr expr) env)
+				   (-eval (caddr expr) env)))
+      ((eq 'eq (car expr)) (-eq (-eval (cadr expr) env)
+			       (-eval (caddr expr) env)))
+      ((eq 'cond (car expr)) (-cond (cadr expr) env))
+      ((eq 'label (caar expr))
+       (-eval (cons (caddar expr) (cdr expr))
+	     (cons (list (cadar expr) (car expr)) env)))
+      ((eq 'lambda (caar expr))
+       (-eval (caddar expr)
+	      (-append (-pair (cadar expr) (lambdaHelper (cdr expr) env))
+		       env)))))))
+
+
+(defun lambdaHelper (meta arg)
+  (cond ((-null meta) '())
+	('t (cons (-eval (car meta) arg)
+		  (lambdaHelper (cdr meta) arg)))))
 
 (defun -atom (expr)
   (atom expr))
@@ -72,8 +81,5 @@
   (cond ((eq (caar expr2) expr1) (cadr expr2))
 	('t (-assoc expr1 (cdr expr2)))))
 
-(defun lambdaHelper (meta arg)
-  (cond ((-null meta) '())
-	('t (cons (-eval (car meta) arg)
-		  (lambdaHelper (cdr meta) arg)))))
+
 
