@@ -16,20 +16,27 @@
 				   (-eval (caddr expr) env)))
       ((eq 'eq (car expr)) (-eq (-eval (cadr expr) env)
 			       (-eval (caddr expr) env)))
-      ((eq 'cond (car expr)) (-cond (cadr expr) env))
-      ((eq 'label (caar expr))
+      ((eq '+ (car expr)) (+ (-eval (cadr expr) env)
+			     (-eval (caddr expr) env)))
+      ((eq '- (car expr)) (- (-eval (cadr expr) env)
+			     (-eval (caddr expr) env)))
+      ((eq '* (car expr)) (* (-eval (cadr expr) env)
+			     (-eval (caddr expr) env)))
+      ((eq '/ (car expr)) (/ (-eval (cadr expr) env)
+			     (-eval (caddr expr) env)))
+      ((eq 'cond (car expr)) (-cond (cadr expr) env))))
+    ((eq 'label (car expr))
        (-eval (cons (caddar expr) (cdr expr))
 	     (cons (list (cadar expr) (car expr)) env)))
-      ((eq 'lambda (caar expr))
+      ((eq 'lambda (car expr))
        (-eval (caddar expr)
-	      (-append (-pair (cadar expr) (lambdaHelper (cdr expr) env))
-		       env)))))))
+	      (-append (-pair (cadar expr) (-evlis (cdr expr) env))
+		       env)))))
 
-
-(defun lambdaHelper (meta arg)
-  (cond ((-null meta) '())
-	('t (cons (-eval (car meta) arg)
-		  (lambdaHelper (cdr meta) arg)))))
+(defun -evlis (expr1 expr2)
+  (cond ((-null expr1) '())
+	('t (cons (-eval (car expr1) expr2)
+		  (lambdaHelper (cdr expr1) expr2)))))
 
 (defun -atom (expr)
   (atom expr))
@@ -48,6 +55,18 @@
 
 (defun -eq (expr1 expr2)
   (eq expr1 expr2))
+
+(defun + (expr1 expr2)
+  (+ expr1 expr2))
+
+(defun - (expr1 expr2)
+  (- expr1 expr2))
+
+(defun * (expr1 expr2)
+  (* expr1 expr2))
+
+(defun / (expr1 expr2)
+  (/ expr1 expr2))
 
 (defun -cond (expr env)
   (cond
@@ -81,5 +100,7 @@
   (cond ((eq (caar expr2) expr1) (cadr expr2))
 	('t (-assoc expr1 (cdr expr2)))))
 
+
+(print (-eval (read)))
 
 
