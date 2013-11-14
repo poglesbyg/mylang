@@ -101,6 +101,7 @@
 	('t (-assoc expr1 (cdr expr2)))))
 
 
-(print (-eval (read)))
+;(print (-eval (read)))
+
 
 
