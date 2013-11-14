@@ -1,0 +1,20 @@
+Recap
+
+WHAT IS A LANGUAGE?
+
+-> A language is a form of communication, with structure (syntax) and meaning (semantics).
+
+-> formal language definition
+-> has a grammar
+-> can be parsed
+-> can be processed by a computer
+
+It's defined by a grammar: a tuple <N,T,S,P>
+	* Non-terminals - kinds of phrases
+	* Terminals - tokens, words
+	* Start symbol
+	* Productions - depending on kind of grammar, for example
+		* context-free N := 
+		* Regular: N := T N or N := N T
+
+It's all the strings over the terminals which are valid according to the grammar		
