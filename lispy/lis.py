@@ -1,28 +1,28 @@
 ## lis.py
 ## create a lisp implementation using python --> might be more scheme than lisp
 
-def tokenize(string):
+def tokenize(st):
     current = ''                            # initialize to empty string
     tokens = []                             # initialize to empty list
-
-    for char in string:                     # checks each character in the the string s
-        if char.iispace():                   # if char is whitespace
+    for ch in st:                     # checks each character in the the string s
+        if ch.isspace():                   # if char is whitespace
             if len(current) > 0:             # if current token is non-empty
                 tokens.append(current)      # add it to the list
                 current = ''                # reset current token to empty string
-            elif char in '()':                 # otherwise, if c is a parenthesis
-                if len(current) > 0:        # end the current token
-                    tokens.append(current)  # add it to the list of tokens
-                    current = ''            # reset current again
-                tokens.append(char)            # add the parenthesis to the token list
-            else:                           # else it is alphanumeric
-                current = current + char       # add the character to the currrent token
+        elif ch in '()':                 # otherwise, if c is a parenthesis
+            if len(current) > 0:        # end the current token
+                tokens.append(current)  # add it to the list of tokens
+                current = ''            # reset current again
+            tokens.append(ch)            # add the parenthesis to the token list
+        else:                           # else it is alphanumeric
+            current = current + ch   # add the character to the currrent token
         # end the for loop
-        if len(current) > 0:                # if there is a current token
-            tokens.append(current)          # add it to the token list
-        return tokens                       # the result is the list of tokens
+        
+    if len(current) > 0:                # if there is a current token
+        tokens.append(current)          # add it to the token list
+    return tokens                       # the result is the list of tokens
 
-def parse(string):
+def parse(st):
     def parse_tokens(tokens, inner):
         res = []
         while len(tokens) > 0:
@@ -32,18 +32,18 @@ def parse(string):
             elif current == ')':
                 if inner: return res
                 else:
-                    error('Unmatched clse paren: ' + string)
+                    error('Unmatched clse paren: ' + st)
                     return None
             else:
                 res.append(current)
 
         if inner:
-            error('Unmatched open paren: ' + string)
+            error('Unmatched open paren: ' + st)
             return None
         else:
             return res
 
-    return parse_tokens(tokenize(string), False)
+        return parse_tokens(tokenize(st), False)
 
 def meval(expr, env):
     if is_primitive(expr): return eval_primitive(expr)
@@ -121,7 +121,7 @@ class Environment:
 def is_definition(expr):return is_special_form(expr, 'define')
 def eval_definition(expr, env):
     name = expr[1]
-    value = meval(expr, env)
+    value = meval(expr[2], env)
     env.add_variable(name, value)
 
 def is_name(expr): return isinstance(expr, str)
@@ -160,19 +160,18 @@ def eval_application(expr, env):
 # Evaluate the body of the procedure in the newly created environment
 # The resulting value is the value of the application
 
-
 def mapply(proc, operands):
-    if(is_primitive_procedure(proc)): return proc(operands)
+    if (is_primitive_procedure(proc)): return proc(operands)
     elif isinstance(proc, Procedure):
         params = proc.getParams()
         newenv = Environment(proc.getEnvironment())
         if len(params) != len(operands):
-            eval_erro('Parameter length mismatch: %s given operands %s'
-                      %(str(proc), str(operands)))
+            eval_error ('Parameter length mismatch: %s given operands %s'
+                        % (str(proc), str(operands)))
             for i in range(0, len(params)):
                 newenv.add_variable(params[i], operands[i])
             return meval(proc.getBody(), newenv)
-        else: eval_error('Application of non-procedure: %s' % (proc))
+    else: eval_error('Application of non-procedure: %s' % (proc))
 
 
 def evalLoop():
@@ -187,6 +186,7 @@ def evalLoop():
     while True:
         inv = raw_input('Lispy-> ')
         if inv == 'quit': break
+        if inv == 'exit': break
         for expr in parse(inv):
             print str(meval(expr, genv))
 
