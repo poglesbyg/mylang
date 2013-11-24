@@ -150,7 +150,7 @@ class Environment:
         self._frame[name] = value
 
     def lookup_variables(self, name):
-        if self._frame in name:
+        if self._frame.has_key(name):
             return self._frame[name]
         elif (self._parent):
             return self._parent.lookup_variables(name)
