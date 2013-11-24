@@ -57,8 +57,8 @@ def meval(expr, env):
     elif is_definition(expr):
         return eval_definition(expr, env)
     elif is_name(expr):
-        return eval_name
-    elif is_lambda:
+        return eval_name(expr, env)
+    elif is_lambda(expr):
         return eval_lambda(expr, env)
     elif is_application(expr):
         return eval_application(expr, env)
