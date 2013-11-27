@@ -2,26 +2,81 @@
 ## I went throught the tokenizer, parser, evaluator
 ## This is the second try.
 
+Symbol = str
 
-def tokenizer(s):
-    current = ''
-    tokens = []
-    for c in s:
-        if c.isspace():
-            if len(current) > 0:
-                tokens.append(current)
-                current = ''
-            elif c in '()':
-                if len(current) > 0:
-                    tokens.append(current)
-                    current = ''
-                tokens.append(c)
-            else:
-                current = current + c
 
-    if len(current) > 0:
-        tokens.append(current)
-    return tokens
+def eval_error(expr):
+    print(expr)
+
+
+def error(expr):
+    print(expr)
+
+
+# def tokenize(s):
+#     current = ''
+#     tokens = []
+#     for c in s:
+#         #if c.isspace():
+#             if len(current) > 0:
+#                     tokens.append(current)
+#                     current = ''
+#             elif c in '()':
+#                 if len(current) > 0:
+#                     tokens.append(current)
+#                     current = ''
+#                 tokens.append(c)
+#             else:
+#                 current = current + c
+
+#     if len(current) > 0:
+#         tokens.append(current)
+#     return tokens
+
+
+# def tokenize(s):
+#     tokens = []
+#     for c in s:
+#         if c in '()':
+#             tokens.append(c)
+#         elif c in '+*=-<':
+#             tokens.append(c)
+#         elif c.isdigit():
+#             tokens.append(c)
+#     return tokens
+
+
+def tokenize(s):
+    "Convert a string into a list of tokens."
+    return s.replace('(', ' ( ').replace(')', ' ) ').split()
+
+
+# def read_from(tokens):
+#     "Read an expression from a sequence of tokens."
+#     if len(tokens) == 0:
+#         raise SyntaxError('unexpected EOF while reading')
+#     token = tokens.pop(0)
+#     if '(' == token:
+#         L = []
+#         while tokens[0] != ')':
+#             L.append(read_from(tokens))
+#         tokens.pop(0)      # pop off ')'
+#         return L
+#     elif ')' == token:
+#         raise SyntaxError('unexpected )')
+#     else:
+#         return atom(token)
+
+
+def atom(token):
+    "Numbers become numbers; every other token is a symbol."
+    try:
+        return int(token)
+    except ValueError:
+        try:
+            return float(token)
+        except ValueError:
+            return Symbol(token)
 
 
 def parse(s):
@@ -46,7 +101,7 @@ def parse(s):
         else:
             return res
 
-    return parse_tokens(tokenizer(s), False)
+    return parse_tokens(tokenize(s), False)
 
 
 def meval(expr, env):
@@ -150,8 +205,11 @@ class Environment:
         self._frame[name] = value
 
     def lookup_variables(self, name):
-        if self._frame.has_key(name):
+#      if self._frame.has_key(name):
+        if name in self._frame:
             return self._frame[name]
+        elif (self._parent is not None):
+            return self._parent.lookup_variables(name)
         elif (self._parent):
             return self._parent.lookup_variables(name)
         else:
@@ -247,6 +305,7 @@ def evalLoop():
     genv.add_variable('*', primitive_times)
     genv.add_variable('=', primitive_equals)
     genv.add_variable('<', primitive_lessthan)
+    genv.add_variable('atom', atom)
     while True:
         inv = raw_input('Lispy2.0 > ')
         if inv == 'quit':
