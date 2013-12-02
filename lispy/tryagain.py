@@ -150,6 +150,13 @@ def primitive_plus(operands):
         return operands[0] + primitive_plus(operands[1:])
 
 
+def primitive_div(operands):
+    if(len(operands) == 0):
+        return 1
+    else:
+        return operands[0] / primitive_div(operands[1:])
+
+
 def primitive_times(operands):
     if(len(operands) == 0):
         return 1
@@ -303,6 +310,7 @@ def evalLoop():
     genv.add_variable('+', primitive_plus)
     genv.add_variable('-', primitive_minus)
     genv.add_variable('*', primitive_times)
+    genv.add_variable('/', primitive_div)
     genv.add_variable('=', primitive_equals)
     genv.add_variable('<', primitive_lessthan)
     genv.add_variable('atom', atom)
