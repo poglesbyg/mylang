@@ -3,11 +3,10 @@ mylang
 
 following McCarthy's 1960 essay on implementing lisp as well as some of Graham's essay on the "Roots of Lisp"
 
-TODO:
-- implement atom 
-- implement eq (done)
-- implement lambda
-- implement cond: checks the car of the first argument returns TRUE then evaluate the next one otherwise go down to the next conditional
+two implementations of lisp. first one is the Lisp in Common Lisp. second one is lisp written in python, which is more
+likely to be considered a scheme than a lisp.
 
-THEN:
-- use mylang to implement the rest of lisp
+  -something wrong with lambda(label in lisplisp)
+  -lambda and define work fine in lispy, though cons is missing
+
+third implementation will be in ruby. have only initialized the file -- no commits yet.
