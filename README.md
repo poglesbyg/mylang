@@ -11,3 +11,13 @@ likely to be considered a scheme than a lisp.
   -lambda and define work fine in lispy, though cons is missing
 
 third implementation will be in ruby. have only initialized the file -- no commits yet.
+
+in order to test my implementations of lisp:
+1. lisp in lisp
+	a. use sbcl (steel bank commmon lisp)
+	b. load file and then check -eval
+	c. runnable examples:
+		>(-eval 'x '((x a) (y b)))
+		a
+
+		
