@@ -7,6 +7,7 @@ two implementations of lisp. first one is the Lisp in Common Lisp. second one is
 likely to be considered a scheme than a lisp.
 
   -something wrong with lambda(label in lisplisp)
+  
   -lambda and define work fine in lispy, though cons is missing
 
 third implementation will be in ruby. have only initialized the file -- no commits yet.
