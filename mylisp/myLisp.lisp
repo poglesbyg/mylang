@@ -1,4 +1,4 @@
-;;; mylisp is an implementation of McCarthy's Lisp
+;;; Mylisp is an implementation of McCarthy's Lisp
 ;;; going to include numbers and strings
 ;;; by Paul Grant
 
@@ -46,7 +46,6 @@
      (-eval (caddar expr)
 	    (-append (-pair (cadar expr) (-evlis (cdr expr) env))
 		     env)))))
-
 (defun -evlis (expr1 expr2)
   (cond ((-null expr1) '())
 	('t (cons (-eval (car expr1) expr2)
@@ -71,18 +70,6 @@
 
 (defun -eq (expr1 expr2)
   (eq expr1 expr2))
-
-(defun + (expr1 expr2)
-  (+ expr1 expr2))
-
-(defun - (expr1 expr2)
-  (- expr1 expr2))
-
-(defun * (expr1 expr2)
-  (* expr1 expr2))
-
-(defun / (expr1 expr2)
-  (/ expr1 expr2))
 
 (defun -null (expr)
   (-eq expr '()))
