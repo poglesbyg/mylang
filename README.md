@@ -20,4 +20,16 @@ in order to test my implementations of lisp:
 		>(-eval 'x '((x a) (y b)))
 		a
 
-		
+	my functions that are implemented begin with a hyphen, '-', otherwise I'm using the sbcl functions
+
+2. lisp/scheme in python
+	a. use 2.X Python
+	b. evaluate the python file into a python REPL
+	c. use the command evalLoop() to start the repl in order to test my lisp
+	d. runable examples:
+		> (= 'this 'this)
+		T
+		> (define foo (lambda (x) (* x x)))
+		None --> however in reality you've made the function foo
+		> (foo 2)
+		4
