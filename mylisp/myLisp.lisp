@@ -97,6 +97,9 @@
   (cond ((eq (caar expr2) expr1) (cadr expr2))
 	('t (-assoc expr1 (cdr expr2)))))
 
+(defun -cons (expr1 expr2)
+  (cons expr1 expr2))
+
 
 ;(print (-eval (read)))
 

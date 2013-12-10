@@ -20,7 +20,7 @@ in order to test my implementations of lisp:
 		>(-eval 'x '((x a) (y b)))
 		a
 
-	my functions that are implemented begin with a hyphen, '-', otherwise I'm using the sbcl functions
+my functions that are implemented begin with a hyphen, '-', otherwise I'm using the sbcl functions
 
 2. lisp/scheme in python
 	a. use 2.X Python
